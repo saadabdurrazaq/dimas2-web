@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+
+  pi-distributor-management-web-prod:
+    image: pi-distributor-management-web-prod
+    container_name: pi-distributor-management-web-prod
+    build:
+      context: .
+      dockerfile: Dockerfile-production
+    ports:
+      - '6002:80'
+      - '6000:80'

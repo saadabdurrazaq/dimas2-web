@@ -1,0 +1,66 @@
+import {
+    ElButton,
+    ElForm,
+    ElFormItem,
+    ElSelect,
+    ElTable,
+    ElPagination,
+    ElInput,
+    ElInputNumber,
+    ElOption,
+    ElIcon,
+    ElTableColumn,
+    ElLoading,
+    ElNotification,
+    ElDatePicker,
+    ElUpload,
+    ElMessageBox,
+    ElRadioGroup,
+    ElRadio,
+    ElAffix,
+    ElTimeline,
+    ElTimelineItem,
+    ElTabs,
+    ElTabPane,
+    ElDialog,
+    ElDropdown,
+    ElDropdownMenu,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElDropdownItem,
+    ElSwitch
+} from 'element-plus'
+
+export default (app) => {
+    app.use(ElButton)
+    app.use(ElForm)
+    app.use(ElFormItem)
+    app.use(ElSelect)
+    app.use(ElOption)
+    app.use(ElTable)
+    app.use(ElPagination)
+    app.use(ElInput)
+    app.use(ElInputNumber)
+    app.use(ElIcon)
+    app.use(ElTableColumn)
+    app.use(ElLoading)
+    app.use(ElNotification)
+    app.use(ElDatePicker)
+    app.use(ElUpload)
+    app.use(ElMessageBox)
+    app.use(ElRadioGroup)
+    app.use(ElRadio)
+    app.use(ElAffix)
+    app.use(ElTimeline)
+    app.use(ElTimelineItem)
+    app.use(ElCheckbox)
+    app.use(ElCheckboxGroup)
+    // app.use(ElMessageBox)
+    app.use(ElTabs)
+    app.use(ElTabPane)
+    app.use(ElDialog)
+    app.use(ElDropdown)
+    app.use(ElDropdownMenu)
+    app.use(ElDropdownItem)
+    app.use(ElSwitch)
+}

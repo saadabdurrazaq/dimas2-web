@@ -1,0 +1,74 @@
+.form-control {
+    min-height: 42px !important;
+}
+
+input[type=file].form-control {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.el-select.form-control,
+.el-input.form-control {
+    padding: 0 !important;
+    .el-input {
+        .el-input__inner {
+            border: none !important;
+            min-height: 36px !important;
+        }
+    }
+}
+
+.el-date-editor.form-control {
+    width: 100%;
+    .el-input__inner {
+        border: none;
+    }
+}
+
+.el-loading-mask {
+    @apply rounded;
+}
+
+.el-loading-spinner {
+    .circular {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.form-control .circular {
+    width: 20px;
+}
+
+.tabulator-col-resize-handle.prev {
+    width: 1px;
+    @apply bg-gray-400;
+}
+
+.tabulator-row.tabulator-row-even.tabulator-selected {
+    background-color: #9ABCEA !important;
+}
+
+// Remove element-plus file list transition on ElUpload component
+.el-upload-list {
+    .el-list-enter-active,
+    .el-list-leave-active {
+        transition: none;
+    }
+    .el-list-enter,
+    .el-list-leave-active {
+        opacity: 0;
+    }
+}
+
+.main {
+    .el-select-dropdown__item {
+        height: auto !important;
+    }
+}
+
+.el-overlay.is-message-box {
+    width: 100vw !important;
+}

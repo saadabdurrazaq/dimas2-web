@@ -1,0 +1,7 @@
+LOGIN: 
+src\pages\auth\Login.vue
+src\router\index.js
+src\layouts\side-menu\Main.vue (as SideMenu)
+src\store\auth.js
+
+
