@@ -197,7 +197,7 @@ export default defineComponent({
     watch(
       computed(() => route.path),
       () => {
-        store.dispatch("sideMenu/render", route);
+        store.dispatch("sideMenu/render", route); 
       }
     );
 

@@ -1,254 +1,81 @@
 <template>
   <div class="grid grid-cols-12 gap-6">
-    <DNNav/>
+    <DNNav />
     <!-- BEGIN: Transactions -->
     <div class="col-span-12 xl:col-span-8">
-      <document-form title="Profile" id="updateProfile" v-loading="profileLoading">
+      <document-form
+        title="Profile"
+        id="updateProfile"
+        v-loading="profileLoading"
+      >
         <div class="pt-5">
           Company code: ...
-          <div class="border-t pt-3" style="margin-top:10px;">  
-          </div>
-          <div class="grid grid-cols-12 gap-5">  
+          <div class="border-t pt-3" style="margin-top: 10px"></div>
+          <div class="grid grid-cols-12 gap-5">
             <div class="col-span-6">
               <form-item
-                class="intro-y"
-                label="Nama Perusahaan"
+                label="Nama Distributor"
                 rules-text="Required"
-                :validationData="validate.nama_perusahaan"
+                :validationData="validate.name"
+                class="intro-y"
               >
                 <input
-                  v-model="validate.nama_perusahaan.$model"
-                  placeholder="Nama Perusahaan"
+                  placeholder="Nama Distributor"
+                  type="text"
                   class="form-control"
+                  v-model="validate.name.$model"
                   :class="{
-                    'border-theme-6': validate.nama_perusahaan.$error,
+                    'border-theme-6': validate.name.$error,
                   }"
                 />
               </form-item>
             </div>
-
             <div class="col-span-6">
               <form-item
-                class="intro-y"
-                label="Direktur Utama" 
+                label="Direktur Utama"
                 rules-text="Required"
-                :validationData="validate.direktur_utama"
+                :validationData="validate.president_director"
+                class="intro-y"
               >
                 <input
-                  v-model="validate.direktur_utama.$model"
                   placeholder="Direktur Utama"
+                  type="text"
                   class="form-control"
+                  v-model="validate.president_director.$model"
                   :class="{
-                    'border-theme-6': validate.direktur_utama.$error,
+                    'border-theme-6': validate.president_director.$error,
                   }"
                 />
               </form-item>
             </div>
-
-            <div class="col-span-12">
+            <div class="col-span-6">
               <form-item
-                class="intro-y"
-                label="Alamat Perusahaan" 
+                label="Email Perusahaan"
                 rules-text="Required"
-                :validationData="validate.alamat_perusahaan"
+                :validationData="validate.company_email"
               >
                 <input
-                  v-model="validate.alamat_perusahaan.$model"
-                  placeholder="Alamat Perusahaan"
+                  v-model="validate.company_email.$model"
+                  type="email"
                   class="form-control"
+                  placeholder="distributor@mail.com"
                   :class="{
-                    'border-theme-6': validate.alamat_perusahaan.$error,
-                  }"
-                />
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                label="Propinsi"
-                rules-text="Required"
-                :validationData="validate.province_id"
-                class="intro-y"
-              >
-                <el-select
-                  @change="(e) => getCities(e)"
-                  v-model="formData.province_id"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.province_id.$error,
-                  }"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in provinces"
-                    :key="item.province_id"
-                    :label="item.province_name"
-                    :value="item.province_id"
-                  ></el-option>
-                </el-select>
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                label="Kota/Kabupaten"
-                rules-text="Required"
-                :validationData="validate.city_id"
-                class="intro-y"
-              >
-                <el-select
-                  @change="(e) => getDistricts(e)"
-                  v-model="formData.city_id"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.city_id.$error,
-                  }"
-                  :disabled="formData.province_id == null"
-                  :loading="cityOptionsLoading"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in cities"
-                    :key="item.city_id"
-                    :label="item.city_type + ' ' + item.city_name"
-                    :value="item.city_id"
-                  ></el-option>
-                </el-select>
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                key=""
-                label="Kecamatan"
-                rules-text="Required"
-                :validationData="validate.district_id"
-                class="intro-y"
-              >
-                <el-select
-                  @change="(e) => getVillages(e)"
-                  v-model="formData.district_id"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.district_id.$error,
-                  }"
-                  :disabled="formData.city_id == null"
-                  :loading="districtOptionsLoading"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in districts"
-                    :key="item.district_id"
-                    :label="item.district_name"
-                    :value="item.district_id"
-                  ></el-option>
-                </el-select>
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                label="Kelurahan/Desa - Kode Pos"
-                rules-text="Required"
-                :validationData="validate.village_id"
-                class="intro-y"
-              >
-                <el-select
-                  v-model="formData.village_id"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.village_id.$error,
-                  }"
-                  :disabled="formData.district_id == null"
-                  :loading="villageOptionsLoading"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in villages"
-                    :key="item.village_id"
-                    :label="`${item.village_name} - ${item.postal_code}`"
-                    :value="item.village_id"
-                  ></el-option>
-                </el-select>
-              </form-item>
-            </div>
-
-            <div class="col-span-6"> 
-              <form-item
-                class="intro-y"
-                label="Kode Pos" 
-                rules-text="Required"
-                :validationData="validate.kode_pos"
-              >
-                <input
-                  v-model="validate.kode_pos.$model"
-                  placeholder="Kode Pos"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.kode_pos.$error,
-                  }"
-                />
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                class="intro-y"
-                label="Email Perusahaan" 
-                rules-text="Required"
-                :validationData="validate.email_perusahaan"
-              >
-                <input
-                  v-model="validate.email_perusahaan.$model"
-                  placeholder="Email Perusahaan"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.email_perusahaan.$error,
-                  }"
-                />
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                class="intro-y"
-                label="Nomor Handphone" 
-                rules-text="Required"
-                :validationData="validate.nomor_handphone"
-              >
-                <input
-                  v-model="validate.nomor_handphone.$model"
-                  placeholder="Nomor Handphone"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.nomor_handphone.$error,
-                  }"
-                />
-              </form-item>
-            </div>
-
-            <div class="col-span-6">
-              <form-item
-                class="intro-y"
-                label="Nomor Telepon" 
-                rules-text="Required"
-                :validationData="validate.nomor_telepon"
-              >
-                <input
-                  v-model="validate.nomor_telepon.$model"
-                  placeholder="Nomor Telepon"
-                  class="form-control"
-                  :class="{
-                    'border-theme-6': validate.nomor_telepon.$error,
+                    'border-theme-6': validate.company_email.$error,
                   }"
                 />
               </form-item>
             </div>
           </div>
         </div>
-        <div class="pt-5"> 
+        <div class="pt-5">
           <div class="w-full text-right">
-            <button type="button" class="btn btn-primary w-24" @click="saveProfile">Save</button>
+            <button
+              type="button"
+              class="btn btn-primary w-24"
+              @click="save"
+            >
+              Save
+            </button>
           </div>
         </div>
       </document-form>
@@ -269,18 +96,20 @@ import {
   toRef,
   toRefs,
 } from "vue";
-import formDataDefaults from "./formData.default"; 
+import formDataDefaults from "./formData.default";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import FormItem from "@/components/form/FormItem";
 import {
   addCompanyAddress,
   updateCompanyAddress,
+  getDistributorProfile,
+  updateDistributorProfile,
 } from "@/utils/api/companyProfile.api";
 import { ElNotification } from "element-plus";
 import { useStore } from "vuex";
 
-import useRegionSearch from "@/composables/useRegionSearch"; 
+import useRegionSearch from "@/composables/useRegionSearch";
 import { useRoute } from "vue-router";
 import useBundleItemApproval from "@/composables/useBundleItemApproval";
 import useFormData from "@/composables/useFormData";
@@ -288,21 +117,25 @@ import useDistributorRegionDropdown from "@/composables/useDistributorRegionDrop
 import useMessageBox from "@/composables/useMessageBox";
 
 export default defineComponent({
-  components: { DocumentForm, FormItem, DNNav},
+  components: { DocumentForm, FormItem, DNNav },
   setup() {
-    const formData = reactive({ ...formDataDefaults });
+    const formData = reactive({
+      ...formDataDefaults,
+    });
     const rules = {
-      nama_perusahaan: { required },
-      direktur_utama: { required },
-      alamat_perusahaan: { required },
-      kode_pos: { required },
-      email_perusahaan: { required },
-      nomor_handphone: { required },
-      nomor_telepon: { required },
-      province_id: { required },
-      city_id: { required },
-      district_id: { required },
-      village_id: { required },
+      // nama_perusahaan: { required },
+      name: { required },
+      // direktur_utama: { required },
+      president_director: { required },
+      // alamat_perusahaan: { required },
+      // kode_pos: { required },
+      company_email: { required },
+      // nomor_handphone: { required },
+      // nomor_telepon: { required },
+      // province_id: { required },
+      // city_id: { required },
+      // district_id: { required },
+      // village_id: { required },
     };
 
     const store = useStore();
@@ -379,61 +212,87 @@ export default defineComponent({
 
     const dataGrid = ref(null);
 
+    let distributor_id = "";
+
+    if (user.role.name == "distributor") {
+      distributor_id = user.distributor.id;
+    }
+
     onMounted(async () => {
       await getProvinces();
+      await getDistributorData();
 
       if (provinces.value != null) {
         loading.value = false;
       }
     });
 
+    const getDistributorData = async () => {
+      if (user.role.name == "distributor") {
+        await getDistributorProfile(distributor_id)
+          .then((response) => {
+            const data = response.data.data;
+
+            Object.keys(formData).forEach((key) => {
+              if (data.hasOwnProperty(key)) {
+                formData[key] = data[key];
+              }
+            });
+          })
+          .finally(() => {
+            loading.value = false;
+          });
+      } else {
+        await getBundleItemDetailData(route.params.distributor_id, 1)
+          .then((response) => {
+            const data = response.data.data;
+
+            Object.keys(formData).forEach((key) => {
+              if (data.hasOwnProperty(key)) {
+                formData[key] = data[key];
+              }
+            });
+          })
+          .finally(() => {
+            loading.value = false;
+          });
+      }
+    };
+
     const loading = ref(true);
 
-    const save = async () => {
+    const save = async () => { 
       validate.value.$touch();
       if (!validate.value.$invalid) {
-        messageBox
-          .$confirm("Simpan data. Lanjutkan?", "Konfirmasi", {
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel",
-            type: "warning",
-            closeOnClickModal: false,
+        const { id, ...data } = formData;
+
+        data.distributor_id = distributor_id;
+
+        loading.value = true;
+        await updateDistributorProfile(formData.id, data)
+          .then(async (response) => {
+            ElNotification.success({
+              title: "Data berhasil disimpan",
+              position: "bottom-right",
+            });
+
+            await getDistributorData();
           })
-          .then(async () => {
-            const { id, ...data } = formData;
-
-            data.distributor_id = user.distributor.id;
-
-            loading.value = true;
-            await updateCompanyAddress(formData.id, data)
-              .then((response) => {
-                ElNotification.success({
-                  title: "Data berhasil disimpan",
-                  position: "bottom-right",
-                });
-
-                resetFormData();
-                dataGrid.value.clearSelection();
-                dataGrid.value.refreshDataGrid();
-              })
-              .catch((error) => {
-                ElNotification.error({
-                  title: "Data gagal disimpan",
-                  message: "Silahkan periksa form sekali lagi",
-                  position: "bottom-right",
-                });
-              })
-              .finally(() => {
-                loading.value = false;
-              });
+          .catch((error) => {
+            console.log(error);
+            ElNotification.error({
+              title: "Data gagal disimpan",
+              message: "Silahkan periksa form sekali lagix",
+              position: "bottom-right",
+            });
           })
-          .catch(() => {
-            // Cancel
+          .finally(() => {
+            loading.value = false;
           });
       } else {
         ElNotification.error({
           title: "Submit Gagal",
-          message: "Silahkan periksa form sekali lagi",
+          message: "Silahkan periksa form sekali lagic",
           position: "bottom-right",
         });
       }
@@ -465,6 +324,7 @@ export default defineComponent({
                 dataGrid.value.refreshDataGrid();
               })
               .catch((error) => {
+                console.log(error);
                 ElNotification.error({
                   title: "Data gagal disimpan",
                   message: "Silahkan periksa form sekali lagi",

@@ -4,4 +4,64 @@ src\router\index.js
 src\layouts\side-menu\Main.vue (as SideMenu)
 src\store\auth.js
 
+DONT DELETE THESE FIELDS:
+- statement_letters
+- users
+- password_resets
+- personal_access_tokens
+- roles
+- permissions
+- role_has_permissions
+- model_has_roles
+- model_has_permissions
+- regions
+- region_provinces
+- provinces
+- villages
+- districts
+- cities
+
+DROP TABLE if exists bank_accounts, bank_keys, bundle_approvals, bundle_item_detail_verifications, bundle_item_detail, bundle_item_settings, bundle_item_verification_activities, bundle_items, bundles, company_addresses, company_deeds, company_managements, company_npwps, current_account_reports, disperindag_recommendations, distribution_networks, distributor_area, distributor_financings, distributor_producer, distributor_recommendation_statuses, distributor_region_verifications, distributor_regions, distributor_statement_letters, distributors, document_nib, document_situ, document_siup, eval_demplot_reports, eval_distributor_activities, eval_distributor_compliances, eval_distributor_erdkks, eval_distributor_evaluation_activities, eval_distributor_evaluation_bundle_activities, eval_distributor_evaluation_items, eval_distributor_evaluation_recommendation_statuses, eval_distributor_evaluations, eval_distributor_kiosk_relations, eval_distributor_positive_news, eval_distributor_report_corrections, eval_distributor_sanctions, eval_distributor_spjb, eval_evaluation_aspect_settings, eval_evaluation_periods, eval_f5_f6_reports, eval_fertilizer_distributions, eval_kiosk_performance_reports, eval_kiosk_stock_fulfillments, eval_kiosk_transactions, eval_master_data_activities, eval_recommendation_status_scores, eval_socialization_reports, eval_supplies_fulfillments, eval_sync_data_wcm_logs, eval_t_pubers_applications cascade;
+
+CRUD DN DISTRIBUTOR PROFILE:
+http://localhost:8081/dn-distributor/profile
+C:\xampp\htdocs\elven\dimas\pi-distributor-management-web-development\src\pages\profile\sections\administration-data\CorporateProfile.vue
+C:\xampp\htdocs\elven\dimas\pi-distributor-management-web-development\src\pages\profile\sections\administration-data\corporate-profile\BusinessName.vue
+C:\xampp\htdocs\elven\dimas\pi-distributor-management-web-development\src\utils\api\companyProfile.api.js
+C:\xampp\htdocs\elven\dimas\pi-distributor-management-api\app\Http\AdministrationData\Distributor\DistributorController.php
+Route::apiResource('distributor', DistributorController::class)->except(['destroy']);
+
+C:\xampp\htdocs\elven\dimas\pi-distributor-management-web-development\src\pages\profile\sections\administration-data\legal-information\SuratPernyataan\SuratPernyataan.vue
+
+NOT EXIST:
+- Alamat Perusahaan
+- Propinsi
+- Kota
+- Kecamatan
+- Kelurahan
+- Kode Pos
+- Nomor Handphone
+- Nomor Telephone
+
+EXIST: 
+- Direktur Utama 
+- Email
+- Nama Distributor
+
+ACCOUNT: 
+vp_sales_region@floo.id
+
+table:
+bundle, admin_regions, approval_list, registration_periods, registration_numbers, 
+
+bundle table:
+region_code: 1,
+level: 1
+registration_period_id: 1
+
+role_id for distributor: 1
+
+Struktur_Oktober_2021.jpg
+
+
 

@@ -47,11 +47,11 @@ const linkTo = (menu, router) => {
     if (menu.subMenu) {
         menu.activeDropdown = !menu.activeDropdown;
     } else {
-        router.push({
-            name: menu.pageName
-        });
+        // router.push({
+        //     name: menu.pageName
+        // });
     }
-};
+}; 
 
 const enter = (el, done) => {
     Velocity(el, "slideDown", { duration: 300 }, { complete: done });

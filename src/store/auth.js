@@ -12,13 +12,19 @@ const state = () => {
 
 // getters
 const getters = {};
-// actions
+
+// actions 
 const actions = {
     async login({ commit }, credential) {
         return await login(credential).then(async(response) => {
-
+            
             await getUser().then(response => {
-                commit("SET_USER", response.data); 
+                commit("SET_USER", response.data);   
+                if (response.data.role.name === 'vp_sales_region') {
+                    localStorage.setItem('distributor-state', 'distributor-state');
+                } else if (response.data.role.name === 'superadmin') {
+                    //
+                }
             });
 
             commit("SET_AUTHENTICATED", true);
@@ -26,11 +32,18 @@ const actions = {
             if (router.currentRoute.value.query.hasOwnProperty('redirect')) {
                 router.push(router.currentRoute.value.query.redirect)
             } else {
-                router.push({ name: 'option-app.option' })
+                if (localStorage.getItem("distributor-state")) {
+                    router.push({ name: 'dn-distributor.data-verification' }) 
+                } else {
+                    router.push({ name: 'option-app.option' }) 
+                }
             }
         })
     },
     async logout({ commit }) {
+        localStorage.removeItem('user-state');
+        localStorage.removeItem('distributor-state');
+        
         await logout();
         commit("SET_USER", null);
         commit("SET_AUTHENTICATED", false);
@@ -45,7 +58,7 @@ const actions = {
             commit("SET_USER", response.data);
         });
     }
-};
+}; 
 
 // mutations
 const mutations = {

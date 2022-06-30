@@ -11,7 +11,7 @@ export const register = (data) => httpClient.post('register', data)
 export const forgotPassword = (email) => httpClient.post('forgot-password', email)
 export const resetPassword = (data) => httpClient.post('reset-password', data)
 
-export const logout = () => httpClient.post('logout')
+export const logout = () => httpClient.post('logout') 
 
 export default {
     login,

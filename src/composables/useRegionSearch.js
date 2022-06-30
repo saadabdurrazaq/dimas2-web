@@ -9,7 +9,7 @@ export default function useRegionSearch(formData) {
     const districts = ref([]);
     const villages = ref([]);
 
-    const provinceOptionsLoading = ref(false);
+    const provinceOptionsLoading = ref(false); 
     const cityOptionsLoading = ref(false);
     const districtOptionsLoading = ref(false);
     const villageOptionsLoading = ref(false);

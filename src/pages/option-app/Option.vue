@@ -3,67 +3,64 @@
     <div class="intro-y box">
       <div style="margin: auto; width: 60%; padding: 10px; margin-top: 20px">
         <div style="text-align: center">
-          <font-awesome-icon icon="fa-solid fa-trash" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="34"
+            height="34"
+            viewBox="0 0 24 24"
+            fill="#1c3faa"
+            stroke="#1c3faa"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="margin: 0 auto; margin-top: 10px; margin-bottom: -5px"
+          >
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
           <br />
           <span style="font-weight: bold">Pilih Aplikasi</span>
           <br />
           <span style="color: gray"
             >Pilih satu aplikasi yang ingin dikunjungi.
           </span>
-          <div class="col-span-12 xl:col-span-9">
-            <div class="row">
-              <div
-                class="parallelogram"
-                style="
-                  height: 150px;
-                  width: 150px;
-                  border: 1px solid gray;
-                  margin: auto;
-                  margin-top: 25px;
-                  margin-right: 20px;
-                "
-              >
+          <div class="grid grid-cols-2 gap-2 mt-5">
+            <div class="border-solid border-2 rounded-md">
+              <div style="margin: 0; position: relative; top: 35%">
                 <img
-                  :src="require('@/assets/images/logo-dimas.png')"
+                  :src="require('@/assets/images/logo-dimas-cropped.png')"
                   @click.stop.prevent="goToDimas1()"
                   class="img-circle elevation-2"
                   alt="User Image"
                   style="
-                    width: 100%;
-                    height: 100%;
-                    left: 5px;
-                    bottom: 5px;
-                    border-radius: 50%;
+                    width: 60%;
                     margin: auto;
-                    cursor: pointer
+                    display: block;
+                    margin-bottom: 10px;
+                    cursor: pointer;
                   "
                 />
+                <span style="font-weight: bold">Subsidi</span>
               </div>
-              <div
-                class="parallelogram"
-                style="
-                  height: 150px;
-                  width: 150px;
-                  border: 1px solid gray;
-                  margin: auto;
-                  margin-top: 25px;
-                "
-              >
+            </div>
+            <div class="border-solid border-2 rounded-md">
+              <div class="pt-20 pb-20">
                 <img
-                  :src="require('@/assets/images/logo-dimas.png')"
+                  :src="require('@/assets/images/logo-dimas2.png')"
                   @click.stop.prevent="goToDimas2()"
                   class="img-circle elevation-2"
                   alt="User Image"
                   style="
-                    width: 100%;
-                    height: 100%;
-                    left: 5px;
-                    bottom: 5px;
-                    border-radius: 50%;
+                    width: 60%;
                     margin: auto;
-                    cursor: pointer
+                    display: block;
+                    margin-bottom: 10px;
+                    cursor: pointer;
                   "
                 />
+                <span style="font-weight: bold">Non Subsidi</span>
               </div>
             </div>
           </div>
@@ -82,7 +79,7 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   components: {
     DocumentForm,
-    FontAwesomeIcon, 
+    FontAwesomeIcon,
   },
   data() {
     return {
@@ -94,10 +91,18 @@ export default defineComponent({
       //
     },
     goToDimas2() {
+      localStorage.setItem("user-state", "kuisioner-page");
+
       return this.router.push({
         name: "kuisioner.kuisioner",
       });
     },
+  },
+  created() {
+    //
+  },
+  mounted() {
+    //
   },
 });
 </script>
@@ -108,5 +113,10 @@ export default defineComponent({
   height: 60px;
   margin: 0 0 0 20px;
   display: inline-block;
+  height: 150px;
+  width: 150px;
+  border: 1px solid gray;
+  margin: auto;
+  margin-top: 25px;
 }
 </style>

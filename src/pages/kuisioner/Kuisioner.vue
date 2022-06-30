@@ -42,6 +42,37 @@
               <div style="margin-top: 15px; margin-bottom: 10px">
                 <input
                   type="radio"
+                  id="one"
+                  value="Cabang"
+                  v-model="isAnswPartII"
+                />
+                <label for="one"> Cabang</label>
+              </div>
+              <div class="w-64" v-show="selectOptionCabang">
+                <form-item
+                  label="Propinsi"
+                  rules-text="Required"
+                  class="intro-y"
+                >
+                  <el-select
+                    @change="(e) => showButtonLanjutkan()"
+                    v-model="form.induk_perusahaan"
+                    class="form-control"
+                    placeholder="Pilih Induk Perusahaan"
+                    filterable
+                  >
+                    <el-option
+                      v-for="item in indukPerusahaan"
+                      :key="item.province_id"
+                      :label="item.province_name"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </form-item>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 10px">
+                <input
+                  type="radio"
                   id="two"
                   value="Korporasi"
                   v-model="isAnswPartII"
@@ -107,7 +138,10 @@
                   value="AR01"
                   v-model="isAnswPartIIIA1"
                 />
-                <label for="one"> AR01</label>
+                <label for="one">
+                  AR01: Kelompok Perusahaan BUMN, Anak dan Cucu Perusahaan BUMN
+                  (tidak termasuk Koperasi, Yayasan, dan Anper Yayasan)</label
+                >
               </div>
               <div style="margin-top: 15px; margin-bottom: 20px">
                 <input
@@ -116,7 +150,10 @@
                   value="AR02"
                   v-model="isAnswPartIIIA1"
                 />
-                <label for="two"> AR02</label>
+                <label for="two">
+                  AR02: Pembeli Pihak Ketiga Diluar Perusahaan BUMN, Anak dan
+                  Cucu Perusahaan BUMN</label
+                >
               </div>
             </div>
           </li>
@@ -140,6 +177,62 @@
                   v-model="isAnswPartIIIA2"
                 />
                 <label for="two"> CV</label>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 20px">
+                <input
+                  type="radio"
+                  id="two"
+                  value="Puskud"
+                  v-model="isAnswPartIIIA2"
+                />
+                <label for="two"> Puskud</label>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 20px">
+                <input
+                  type="radio"
+                  id="two"
+                  value="UD"
+                  v-model="isAnswPartIIIA2"
+                />
+                <label for="two"> UD</label>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 20px">
+                <input
+                  type="radio"
+                  id="two"
+                  value="Koperasi"
+                  v-model="isAnswPartIIIA2"
+                />
+                <label for="two"> Koperasi</label>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 20px">
+                <input
+                  type="radio"
+                  id="two"
+                  value="Lembaga Pemerintah"
+                  v-model="isAnswPartIIIA2"
+                />
+                <label for="two"> Lembaga Pemerintah</label>
+              </div>
+              <div style="margin-top: 15px; margin-bottom: 20px">
+                <input
+                  type="radio"
+                  id="two"
+                  :value="
+                    form.isAnswPartIIIA2 === ''
+                      ? 'Lainnya'
+                      : form.isAnswPartIIIA2
+                  "
+                  v-model="isAnswPartIIIA2"
+                  style="margin-right: 3px"
+                />
+                <input
+                  class="inp"
+                  type="input"
+                  v-model="form.isAnswPartIIIA2"
+                  v-on:change="changeValOfAnswPartIIIA2()"
+                  placeholder=" Lainnya"
+                />
               </div>
             </div>
           </li>
@@ -204,10 +297,21 @@
                 <input
                   type="radio"
                   id="two"
-                  value="Lainnya"
+                  :value="
+                    form.isAnswPartIIIC2 === ''
+                      ? 'Lainnya'
+                      : form.isAnswPartIIIC2
+                  "
                   v-model="isAnswPartIIIC2"
+                  style="margin-right: 3px"
                 />
-                <label for="two"> Lainnya</label>
+                <input
+                  type="input"
+                  class="inp"
+                  v-model="form.isAnswPartIIIC2"
+                  v-on:change="changeValOfAnswPartIIIC2()"
+                  placeholder=" Lainnya"
+                />
               </div>
             </div>
           </li>
@@ -235,6 +339,8 @@ import { defineComponent } from "vue-demi";
 import DocumentForm from "@/components/panel/DocumentForm.vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { Form } from "vform";
+import axios from "axios";
 
 export default defineComponent({
   components: {
@@ -254,54 +360,149 @@ export default defineComponent({
       showQuestionsPartIIIA: false,
       showQuestionsPartIIIB: false,
       showQuestionsPartIIIC: false,
+      form: new Form({
+        isAnswPartIIIA2: "",
+        isAnswPartIIIC2: "",
+        induk_perusahaan: null,
+      }),
+      indukPerusahaan: [
+        "PT Perusahaan 1",
+        "PT Perusahaan 2",
+        "PT Perusahaan 3",
+      ],
+      selectOptionCabang: false,
       permitToProceed: false,
+      verificationType: "",
     };
   },
   methods: {
-    showButton() {
+    determineUser() {
+      let dataAnsw = this.$route.params.dataAnsw;
+
+      if (dataAnsw === "nothing") {
+        ElMessageBox.alert(
+          "Silahkan isi data kuisioner terlebih dahulu",
+          "Title",
+          {
+            confirmButtonText: "OK",
+          }
+        );
+      }
+    },
+    changeValOfAnswPartIIIA2() {
+      if (this.form.isAnswPartIIIA2 !== "") {
+        this.isAnswPartIIIA2 = this.form.isAnswPartIIIA2;
+      } else {
+        this.isAnswPartIIIA2 = "Lainnya";
+      }
+    },
+    changeValOfAnswPartIIIC2() {
+      if (this.form.isAnswPartIIIC2 !== "") {
+        this.isAnswPartIIIC2 = this.form.isAnswPartIIIC2;
+      } else {
+        this.isAnswPartIIIC2 = "Lainnya";
+      }
+    },
+    showButtonLanjutkan() {
       if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Retail" &&
+        this.isAnswPartIIIA1 !== "" &&
+        this.isAnswPartIIIA2 !== "" &&
+        this.isAnswPartIIIA2 !== "Lainnya"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "dn-distributor.profile";
+      } else if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Cabang" &&
+        this.form.induk_perusahaan !== null &&
+        this.isAnswPartIIIA1 !== "" &&
+        this.isAnswPartIIIA2 !== "" &&
+        this.isAnswPartIIIA2 !== "Lainnya"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "dn-cabang.profile";
+      } else if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Korporasi" &&
+        this.isAnswPartIIIB === "Dalam Negeri (DN)" &&
+        this.isAnswPartIIIA1 !== "" &&
+        this.isAnswPartIIIA2 !== "" &&
+        this.isAnswPartIIIC1 !== "" &&
+        this.isAnswPartIIIC2 !== "" &&
+        this.isAnswPartIIIA2 !== "Lainnya" &&
+        this.isAnswPartIIIC2 !== "Lainnya"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "dn-korporasi.profile";
+      } else if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Korporasi" &&
+        this.isAnswPartIIIB === "Luar Negeri (LN)" &&
+        this.isAnswPartIIIC1 !== "" &&
+        this.isAnswPartIIIC2 !== "" &&
+        this.isAnswPartIIIC2 !== "Lainnya"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "ln-korporasi.profile";
+      } else if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Retail dan Korporasi" &&
+        this.isAnswPartIIIA1 !== "" &&
+        this.isAnswPartIIIA2 !== "" &&
+        this.isAnswPartIIIA2 !== "Lainnya" &&
+        this.isAnswPartIIIC1 !== "" &&
+        this.isAnswPartIIIC2 !== "" &&
+        this.isAnswPartIIIC2 !== "Lainnya"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "dn-retail-korporasi.profile";
+      } else if (
+        this.isAnswPartI === "Ya" &&
+        this.isAnswPartII === "Korporasi" &&
+        this.isAnswPartIIIB === "Agen dari Perusahaan LN"
+      ) {
+        this.permitToProceed = true;
+        this.verificationType = "ln-agen.profile";
+      } else if (
+        // if user empty the input field "Lainnya"
         (this.isAnswPartI === "Ya" &&
           this.isAnswPartII === "Retail" &&
-          this.isAnswPartIIIA1 !== "" &&
-          this.isAnswPartIIIA2 !== "") ||
+          this.isAnswPartIIIA2 === "Lainnya") ||
+        (this.isAnswPartI === "Ya" &&
+          this.isAnswPartII === "Cabang" &&
+          this.isAnswPartIIIA2 === "Lainnya") ||
+        (this.isAnswPartI === "Ya" &&
+          this.isAnswPartII === "Retail dan Korporasi" &&
+          (this.isAnswPartIIIA2 === "Lainnya" ||
+            this.isAnswPartIIIC2 === "Lainnya")) ||
         (this.isAnswPartI === "Ya" &&
           this.isAnswPartII === "Korporasi" &&
           this.isAnswPartIIIB === "Dalam Negeri (DN)" &&
-          this.isAnswPartIIIA1 !== "" &&
-          this.isAnswPartIIIA2 !== "" &&
-          this.isAnswPartIIIC1 !== "" &&
-          this.isAnswPartIIIC2 !== "") ||
+          (this.isAnswPartIIIA2 === "Lainnya" ||
+            this.isAnswPartIIIC2 === "Lainnya")) ||
         (this.isAnswPartI === "Ya" &&
           this.isAnswPartII === "Korporasi" &&
           this.isAnswPartIIIB === "Luar Negeri (LN)" &&
-          this.isAnswPartIIIC1 !== "" &&
-          this.isAnswPartIIIC2 !== "") ||
-        (this.isAnswPartI === "Ya" &&
-          this.isAnswPartII === "Retail dan Korporasi" &&
-          this.isAnswPartIIIA1 !== "" &&
-          this.isAnswPartIIIA2 !== "" &&
-          this.isAnswPartIIIC1 !== "" &&
-          this.isAnswPartIIIC2 !== "") ||
-        (this.isAnswPartI === "Ya" &&
-          this.isAnswPartII === "Korporasi" &&
-          this.isAnswPartIIIB === "Agen dari Perusahaan LN")
+          this.isAnswPartIIIC2 === "Lainnya")
       ) {
-        this.permitToProceed = true;
+        this.permitToProceed = false;
       }
     },
     confirmAllTheAnsw() {
-      ElMessageBox.confirm(
-        "Apakah pilihan Anda sudah benar?",
-        "Warning",
-        {
-          confirmButtonText: "Ya",
-          cancelButtonText: "Belum Yakin",
-          type: "warning",
-        }
-      )
+      ElMessageBox.confirm("Apakah pilihan Anda sudah benar?", "Warning", {
+        confirmButtonText: "Ya",
+        cancelButtonText: "Belum Yakin",
+        type: "warning",
+      })
         .then(() => {
+          let dataUser = this.verificationType;
+          localStorage.setItem("user-state", "verifikasi-page");
+
           return this.router.push({
             name: "verifikasi.verifikasi",
+            params: { dataUser },
           });
         })
         .catch(() => {
@@ -315,12 +516,15 @@ export default defineComponent({
   watch: {
     isAnswPartI: function () {
       if (this.isAnswPartI === "Tidak") {
+        this.selectOptionCabang = false;
         this.showQuestionsPartII = false;
         this.showQuestionsPartIIIA = false;
         this.showQuestionsPartIIIB = false;
         this.showQuestionsPartIIIC = false;
         this.permitToProceed = true;
+        this.verificationType = "dn-individu.profile";
       } else if (this.isAnswPartI === "Ya") {
+        this.selectOptionCabang = false;
         this.permitToProceed = false;
         this.isAnswPartII = "";
         this.isAnswPartIIIA1 = "";
@@ -333,6 +537,19 @@ export default defineComponent({
     },
     isAnswPartII: function () {
       if (this.isAnswPartI === "Ya" && this.isAnswPartII === "Retail") {
+        this.selectOptionCabang = false;
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
+        this.isAnswPartIIIA1 = "";
+        this.isAnswPartIIIA2 = "";
+        this.permitToProceed = false;
+        this.showQuestionsPartIIIA = true;
+        this.showQuestionsPartIIIB = false;
+        this.showQuestionsPartIIIC = false;
+      } else if (this.isAnswPartI === "Ya" && this.isAnswPartII === "Cabang") {
+        this.selectOptionCabang = true;
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
         this.isAnswPartIIIA1 = "";
         this.isAnswPartIIIA2 = "";
         this.permitToProceed = false;
@@ -343,6 +560,7 @@ export default defineComponent({
         this.isAnswPartI === "Ya" &&
         this.isAnswPartII === "Korporasi"
       ) {
+        this.selectOptionCabang = false;
         this.permitToProceed = false;
         this.isAnswPartIIIB = false;
         this.showQuestionsPartIIIA = false;
@@ -352,6 +570,9 @@ export default defineComponent({
         this.isAnswPartI === "Ya" &&
         this.isAnswPartII === "Retail dan Korporasi"
       ) {
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
+        this.selectOptionCabang = false;
         this.isAnswPartIIIA1 = "";
         this.isAnswPartIIIA2 = "";
         this.isAnswPartIIIC1 = "";
@@ -364,6 +585,8 @@ export default defineComponent({
     },
     isAnswPartIIIB: function () {
       if (this.isAnswPartIIIB === "Dalam Negeri (DN)") {
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
         this.isAnswPartIIIA1 = "";
         this.isAnswPartIIIA2 = "";
         this.isAnswPartIIIC1 = "";
@@ -373,6 +596,8 @@ export default defineComponent({
         this.showQuestionsPartIIIB = true;
         this.showQuestionsPartIIIC = true;
       } else if (this.isAnswPartIIIB === "Luar Negeri (LN)") {
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
         this.isAnswPartIIIC1 = "";
         this.isAnswPartIIIC2 = "";
         this.permitToProceed = false;
@@ -380,24 +605,30 @@ export default defineComponent({
         this.showQuestionsPartIIIB = true;
         this.showQuestionsPartIIIC = true;
       } else if (this.isAnswPartIIIB === "Agen dari Perusahaan LN") {
+        this.form.isAnswPartIIIA2 = "";
+        this.form.isAnswPartIIIC2 = "";
         this.permitToProceed = false;
         this.showQuestionsPartIIIA = false;
         this.showQuestionsPartIIIC = false;
-        this.showButton();
+        this.showButtonLanjutkan();
       }
     },
     isAnswPartIIIA1: function () {
-      this.showButton();
+      this.showButtonLanjutkan();
     },
     isAnswPartIIIA2: function () {
-      this.showButton();
+      this.showButtonLanjutkan();
     },
     isAnswPartIIIC1: function () {
-      this.showButton();
+      this.showButtonLanjutkan();
     },
     isAnswPartIIIC2: function () {
-      this.showButton();
+      this.showButtonLanjutkan();
     },
+  },
+  mounted() {},
+  created() {
+    this.determineUser();
   },
 });
 </script>
@@ -421,5 +652,17 @@ ol li {
 }
 body.swal2-shown {
   overflow-y: auto;
+}
+
+.inp {
+  border: none;
+  border-bottom: 1px solid #d6d6d6;
+  outline: none;
+}
+
+[placeholder]:focus::-webkit-input-placeholder {
+  transition: text-indent 0.4s 0.4s ease;
+  text-indent: -100%;
+  opacity: 1;
 }
 </style>

@@ -278,7 +278,6 @@ import {
 } from "@/utils/api/companyProfile.api";
 import { ElNotification } from "element-plus";
 import { useStore } from "vuex";
-
 import useRegionSearch from "@/composables/useRegionSearch";
 import { useRoute } from "vue-router";
 import useBundleItemApproval from "@/composables/useBundleItemApproval";

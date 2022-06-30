@@ -1,6 +1,6 @@
 import httpClient from "./httpClient"
 
-const END_POINT = '/statement-letter-templates'
+const END_POINT = '/statement-letter-templates' 
 
 export const get = (id = "") => httpClient.get(END_POINT)
 export const add = (data) => httpClient.post(END_POINT, data)
